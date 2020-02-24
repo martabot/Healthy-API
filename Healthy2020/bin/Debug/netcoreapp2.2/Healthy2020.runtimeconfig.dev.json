@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\martabot\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\martabot\\.nuget\\packages"
+    ]
+  }
+}
