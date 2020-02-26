@@ -21,12 +21,12 @@ namespace Healthy2020.Models
         public int AdminUltModId { get; set; }
         [ForeignKey("AdminUltModId")]
         public Usuario AdminUltMod { get; set; }
-        public DateTime FechaUltMod { get; set; }
+        public string FechaUltMod { get; set; }
         public int Conducta { get; set; }
         public int EstadoCuenta { get; set; }
-        public DateTime FecNac { get; set; }
+        public string FecNac { get; set; }
         public int Fumador { get; set; }
-        public DateTime FumaUltMod { get; set; }
+        public string FumaUltMod { get; set; }
 
     }
 }

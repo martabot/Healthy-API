@@ -104,7 +104,7 @@ namespace Healthy2020.Api
                 if (ModelState.IsValid)
                 {
                     entidad.Coordinador = contexto.Usuario.Single(e => e.Mail == User.Identity.Name);
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     entidad.Estado = 1;
                     contexto.Actividad.Add(entidad);
                     contexto.SaveChanges();
@@ -120,14 +120,14 @@ namespace Healthy2020.Api
 
         [HttpPut("{id}")]
         [Authorize(Policy = "Coordinador")]
-        public async Task<IActionResult> Put(int id, [FromForm] Actividad entidad)
+        public async Task<IActionResult> Put(int id, [FromBody] Actividad entidad)
         {
             try
             {
                 if (ModelState.IsValid && contexto.Actividad.AsNoTracking().SingleOrDefault(x => x.Id == id) != null)
                 {
                     entidad.Id = id;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Actividad.Update(entidad);
                     contexto.SaveChanges();
                     return Ok(entidad);
@@ -150,7 +150,7 @@ namespace Healthy2020.Api
                 if (entidad != null)
                 {
                     entidad.Estado = estado;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Actividad.Update(entidad);
                     contexto.SaveChanges();
                     return Ok();

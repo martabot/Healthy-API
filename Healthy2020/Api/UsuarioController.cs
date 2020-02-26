@@ -106,8 +106,8 @@ namespace Healthy2020.Api
 
                     entidad.Password = convertirPass(entidad.Password);
                     entidad.AdminUltMod = contexto.Usuario.FirstOrDefault(x => x.Mail == User.Identity.Name);
-                    entidad.FechaUltMod = DateTime.Now;
-                    entidad.FumaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
+                    entidad.FumaUltMod = DateTime.Now.ToString();
                     entidad.EstadoCuenta = 1;
                     entidad.Conducta = 10;
                     contexto.Usuario.Add(entidad);
@@ -123,14 +123,14 @@ namespace Healthy2020.Api
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromForm] Usuario entidad)
+        public async Task<IActionResult> Put(int id, Usuario entidad)
         {
             try
             {
                 if (ModelState.IsValid && contexto.Usuario.AsNoTracking().SingleOrDefault(x => x.Id == id) != null)
                 {
                     entidad.Id = id;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     entidad.EstadoCuenta = 1;
                     contexto.Usuario.Update(entidad);
                     contexto.SaveChanges();
@@ -140,7 +140,7 @@ namespace Healthy2020.Api
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -155,7 +155,7 @@ namespace Healthy2020.Api
                 if (convertirPass(pass1).Equals(entidad.Password))
                 {
                     entidad.Password = convertirPass(pass2);
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Usuario.Update(entidad);
                     contexto.SaveChanges();
                     return Ok(entidad);
@@ -190,7 +190,7 @@ namespace Healthy2020.Api
                 if (entidad != null)
                 {
                     entidad.AdminUltModId = contexto.Usuario.FirstOrDefault(x=>x.Mail==User.Identity.Name).Id;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     entidad.EstadoCuenta = estado;
                     contexto.Usuario.Update(entidad);
                     contexto.SaveChanges();
