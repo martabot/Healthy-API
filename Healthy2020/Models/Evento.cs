@@ -12,8 +12,8 @@ namespace Healthy2020.Models
         public int ActividadId { get; set; }
         [ForeignKey("ActividadId")]
         public Actividad Actividad { get; set; }
-        public DateTime FechaHora { get; set; }
-        public DateTime FechaUltMod { get; set; }
+        public string FechaHora { get; set; }
+        public string FechaUltMod { get; set; }
         public int Estado { get; set; }
         public string Titulo { get; set; }
         public string Descripcion { get; set; }

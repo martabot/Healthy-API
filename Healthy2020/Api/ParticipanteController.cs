@@ -64,7 +64,7 @@ namespace Healthy2020.Api
                 {
                     entidad.Usuario = contexto.Usuario.Single(e => e.Mail == User.Identity.Name);
                     entidad.Actividad = contexto.Actividad.Single(e => e.Id == entidad.ActividadId);
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     entidad.Estado = 1;
                     contexto.Participante.Add(entidad);
                     contexto.SaveChanges();
@@ -87,10 +87,10 @@ namespace Healthy2020.Api
                 if (entidad != null)
                 {
                     entidad.Estado = estado;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Participante.Update(entidad);
                     contexto.SaveChanges();
-                    return Ok();
+                    return Ok(entidad);
                 }
                 return BadRequest();
             }

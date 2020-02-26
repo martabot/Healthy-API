@@ -94,7 +94,7 @@ namespace Healthy2020.Api
                 {
                     entidad.Actividad = contexto.Actividad.Single(e => e.Id == entidad.ActividadId);
                     entidad.Estado = 1;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Evento.Add(entidad);
                     contexto.SaveChanges();
                     return CreatedAtAction(nameof(Get), new { id = entidad.Id }, entidad);
@@ -116,7 +116,7 @@ namespace Healthy2020.Api
                 if (ModelState.IsValid && contexto.Evento.AsNoTracking().SingleOrDefault(x => x.Id == id) != null)
                 {
                     entidad.Id = id;
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Evento.Update(entidad);
                     contexto.SaveChanges();
                     return Ok(entidad);
