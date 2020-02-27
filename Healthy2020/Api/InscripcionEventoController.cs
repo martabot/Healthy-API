@@ -40,19 +40,6 @@ namespace Healthy2020.Api
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get(int usuario, int evento)
-        {
-            try
-            {
-                return Ok(contexto.InscripcionEvento.LastOrDefault(x => x.UsuarioId == usuario && x.EventoId == evento && x.Estado == 1).Id);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
         [HttpPost]
         [Authorize(Policy = "Usuario")]
         public async Task<IActionResult> Post(InscripcionEvento entidad)
@@ -77,18 +64,19 @@ namespace Healthy2020.Api
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id, int estado)
+        [HttpDelete]
+        [Authorize(Policy ="Usuario")]
+        public async Task<IActionResult> Delete( Evento evento)
         {
             try
             {
-                var entidad = contexto.InscripcionEvento.AsNoTracking().FirstOrDefault(e => e.Id == id);
+                var entidad = contexto.InscripcionEvento.AsNoTracking().Include(x=>x.Evento).FirstOrDefault(e => e.UsuarioId==UsuarioController.soyYo&&e.EventoId==evento.Id &&e.Estado==1);
                 if (entidad != null)
                 {
-                    entidad.Estado = estado;
+                    entidad.Estado = 0;
                     contexto.InscripcionEvento.Update(entidad);
                     contexto.SaveChanges();
-                    return Ok();
+                    return Ok(entidad.Evento);
                 }
                 return BadRequest();
             }

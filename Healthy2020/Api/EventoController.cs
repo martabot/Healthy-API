@@ -39,26 +39,47 @@ namespace Healthy2020.Api
             }
         }
 
+        [HttpGet] 
+        [Route("prueba")]
+        public async Task<IActionResult> Getdeprueba(int i,string o,int r)
+        {
+            try
+            {
+
+                return Ok(contexto.Participante);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [Route("Usuario/{tipo}")]
         [Authorize(Policy = "Usuario")]
         public async Task<IActionResult> Get(string tipo)
         {
             try
             {
-                var lista = contexto.InscripcionEvento.Where(x => x.Usuario.Id == UsuarioController.soyYo && x.Estado == 1);
-                var actividad = contexto.Participante.Where(x => x.UsuarioId == UsuarioController.soyYo && x.Estado==1);
-                var actividades = actividad.Select(x=>x.ActividadId);
-                var ids = lista.Select(x => x.Evento.Id).ToArray();
+                var lista = contexto.InscripcionEvento.Where(x => x.Usuario.Id == UsuarioController.soyYo&&x.Estado==1);
+                var estado1 = lista.Select(x => x.EventoId).ToArray();
+
+                var lista3 = contexto.InscripcionEvento.Where(x => x.Usuario.Id == UsuarioController.soyYo && x.Estado == 0);
+                var estado0 = lista3.Select(x => x.EventoId).ToArray();
+
+                var lista2 = contexto.Participante.Include(a=>a.Actividad).Where(x => x.UsuarioId == UsuarioController.soyYo && x.Estado == 1 && x.Actividad.Estado == 1);
+                var participa = lista2.Select(x => x.ActividadId).ToArray();
+
+                var aux4 = contexto.Participante.Include(a => a.Actividad).Where(x => x.UsuarioId == UsuarioController.soyYo && (x.Estado == 1 || x.Actividad.Estado == 1));
+                var noparticipa = aux4.Select(x => x.ActividadId).ToArray();
+
 
                 if (tipo.Equals("mias"))
                 {
-
-                    return Ok(contexto.Evento.Where(x => ids.Contains(x.Id) && x.Estado == 1 &&actividades.Contains(x.ActividadId)));
+                    return Ok(contexto.Evento.Where(x => estado1.Contains(x.Id) && x.Estado == 1 && participa.Contains(x.ActividadId)));
                 }
                 else
                 {
-
-                    return Ok(contexto.Evento.Where(x => !ids.Contains(x.Id) && x.Estado == 1 && actividades.Contains(x.ActividadId)));
+                    return Ok(contexto.Evento.Where(x => (!estado1.Contains(x.Id) && estado0.Contains(x.Id) && x.Estado == 1 && participa.Contains(x.ActividadId)) || (!estado1.Contains(x.Id) &&x.Estado == 1 && participa.Contains(x.ActividadId))));
 
                 }
             }

@@ -17,5 +17,6 @@ namespace Healthy2020.Models
         public int CoordinadorId { get; set; }
         [ForeignKey("CoordinadorId")]
         public Usuario Coordinador { get; set; }
+
     }
 }

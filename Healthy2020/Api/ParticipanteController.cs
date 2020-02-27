@@ -78,19 +78,20 @@ namespace Healthy2020.Api
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id, int estado)
+        [HttpDelete]
+        [Authorize(Policy = "Usuario")]
+        public async Task<IActionResult> Delete(Actividad actividad)
         {
             try
             {
-                var entidad = contexto.Participante.AsNoTracking().FirstOrDefault(e => e.Id == id);
+                var entidad = contexto.Participante.AsNoTracking().Include(x => x.Actividad).FirstOrDefault(e => e.UsuarioId == UsuarioController.soyYo && e.ActividadId == actividad.Id && e.Estado == 1);
                 if (entidad != null)
                 {
-                    entidad.Estado = estado;
+                    entidad.Estado = 0;
                     entidad.FechaUltMod = DateTime.Now.ToString();
                     contexto.Participante.Update(entidad);
                     contexto.SaveChanges();
-                    return Ok(entidad);
+                    return Ok(entidad.Actividad);
                 }
                 return BadRequest();
             }
