@@ -61,9 +61,9 @@ namespace Healthy2020.Api
             {
                 if (ModelState.IsValid)
                 {
-                    entidad.UsuarioId = contexto.Usuario.Single(e => e.Mail == User.Identity.Name).Id;
+                    entidad.UsuarioId = UsuarioController.soyYo;
                     entidad.Evento = contexto.Evento.Single(e => e.Id == entidad.EventoId);
-                    entidad.FechaUltMod = DateTime.Now;
+                    entidad.FechaUltMod = DateTime.Now.ToString();
                     entidad.Estado = 1;
                     contexto.InscripcionEvento.Add(entidad);
                     contexto.SaveChanges();

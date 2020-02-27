@@ -45,19 +45,20 @@ namespace Healthy2020.Api
         {
             try
             {
-                int id = contexto.Usuario.Single(u => u.Mail.Equals(User.Identity.Name)).Id;
-                var lista = contexto.InscripcionEvento.Where(x => x.Usuario.Id == id && x.Estado == 1);
+                var lista = contexto.InscripcionEvento.Where(x => x.Usuario.Id == UsuarioController.soyYo && x.Estado == 1);
+                var actividad = contexto.Participante.Where(x => x.UsuarioId == UsuarioController.soyYo && x.Estado==1);
+                var actividades = actividad.Select(x=>x.ActividadId);
                 var ids = lista.Select(x => x.Evento.Id).ToArray();
 
                 if (tipo.Equals("mias"))
                 {
 
-                    return Ok(contexto.Evento.Where(x => ids.Contains(x.Id) && x.Estado == 1));
+                    return Ok(contexto.Evento.Where(x => ids.Contains(x.Id) && x.Estado == 1 &&actividades.Contains(x.ActividadId)));
                 }
                 else
                 {
 
-                    return Ok(contexto.Evento.Where(x => !ids.Contains(x.Id) && x.Estado == 1));
+                    return Ok(contexto.Evento.Where(x => !ids.Contains(x.Id) && x.Estado == 1 && actividades.Contains(x.ActividadId)));
 
                 }
             }
@@ -74,8 +75,7 @@ namespace Healthy2020.Api
         {
             try
             {
-                int id = contexto.Usuario.Single(u => u.Mail.Equals(User.Identity.Name)).Id;
-                return Ok(contexto.Evento.Where(x => x.Actividad.Coordinador.Id == id));
+                return Ok(contexto.Evento.Where(x => x.Actividad.Coordinador.Id == UsuarioController.soyYo));
             }
             catch (Exception ex)
             {
@@ -86,7 +86,7 @@ namespace Healthy2020.Api
 
         [HttpPost]
         [Authorize(Policy = "Coordinador")]
-        public async Task<IActionResult> Post(Evento entidad)
+        public async Task<IActionResult> Post([FromBody] Evento entidad)
         {
             try
             {

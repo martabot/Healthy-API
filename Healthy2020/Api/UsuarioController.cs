@@ -21,6 +21,7 @@ namespace Healthy2020.Api
     {
         private readonly DataContext contexto;
         private readonly IConfiguration config;
+        public static int soyYo;
 
         public UsuarioController(DataContext contexto, IConfiguration config)
         {
@@ -58,6 +59,7 @@ namespace Healthy2020.Api
                         expires: DateTime.Now.AddMinutes(120),
                         signingCredentials: credenciales
                     );
+                    soyYo = usuario.Id;
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                 }
             }
@@ -67,6 +69,8 @@ namespace Healthy2020.Api
             }
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -75,6 +79,37 @@ namespace Healthy2020.Api
                 var usuario = User.Identity.Name;
 
                 return Ok(contexto.Usuario.FirstOrDefault(x => x.Mail == usuario));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("Administradores")]
+        [Authorize(Policy = "Administrador")]
+        public async Task<IActionResult> Admins()
+        {
+            try
+            {
+                return Ok(contexto.Usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("Coordinadores")]
+        [Authorize(Policy = "Coordinador")]
+        public async Task<IActionResult> Coords()
+        {
+            try
+            {
+                return Ok(contexto.Usuario.Count());
             }
             catch (Exception ex)
             {
@@ -97,7 +132,7 @@ namespace Healthy2020.Api
 
         [HttpPost]
         [Authorize(Policy ="Administrador")]
-        public async Task<IActionResult> Post(Usuario entidad)
+        public async Task<IActionResult> Post([FromBody] Usuario entidad)
         {
             try
             {

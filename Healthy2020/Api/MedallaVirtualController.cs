@@ -22,14 +22,14 @@ namespace Healthy2020.Api
             this.contexto = contexto;
             this.config = config;
         }
-
+        
         //Obtiene todas las medallas del usuario con el ID
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return Ok(contexto.MedallaVirtual.SingleOrDefault(x => x.UsuarioId == id));
+                return Ok(contexto.MedallaVirtual.Where(x => x.UsuarioId == id));
             }
             catch (Exception ex)
             {
@@ -45,7 +45,6 @@ namespace Healthy2020.Api
             {
                 if (ModelState.IsValid)
                 {
-                    entidad.Usuario = contexto.Usuario.Single(e => e.Mail == User.Identity.Name);
                     contexto.MedallaVirtual.Add(entidad);
                     contexto.SaveChanges();
                     return CreatedAtAction(nameof(Get), new { id = entidad.UsuarioId }, entidad);

@@ -25,6 +25,7 @@ namespace Healthy2020.Api
         }
 
         [HttpGet]
+        [Route("Admin")]
         [Authorize(Policy ="Administrador")]
         public async Task<IActionResult> Get()
         {
@@ -45,8 +46,7 @@ namespace Healthy2020.Api
         {
             try
             {
-                    int id = contexto.Usuario.Single(u=>u.Mail.Equals(User.Identity.Name)).Id;
-                    var lista = contexto.Participante.Where(x => x.Usuario.Id == id && x.Estado == 1);
+                    var lista = contexto.Participante.Where(x => x.Usuario.Id == UsuarioController.soyYo && x.Estado == 1);
                     var ids = lista.Select(x => x.Actividad.Id).ToArray();
 
                 if (tipo.Equals("mias"))
@@ -75,16 +75,14 @@ namespace Healthy2020.Api
         {
             try
             {
-                int id = contexto.Usuario.Single(u => u.Mail.Equals(User.Identity.Name)).Id;
-
                 if (tipo.Equals("mias"))
                 {
-                    return Ok(contexto.Actividad.Where(x => x.Coordinador.Id == id));
+                    return Ok(contexto.Actividad.Where(x => x.Coordinador.Id == UsuarioController.soyYo));
                 }
                 else
                 {
 
-                    return Ok(contexto.Actividad.Where(x => x.Coordinador.Id != id));
+                    return Ok(contexto.Actividad.Where(x => x.Coordinador.Id != UsuarioController.soyYo));
 
                 }
             }
@@ -97,7 +95,7 @@ namespace Healthy2020.Api
 
         [HttpPost]
         [Authorize(Policy ="Coordinador")]
-        public async Task<IActionResult> Post(Actividad entidad)
+        public async Task<IActionResult> Post([FromBody] Actividad entidad)
         {
             try
             {

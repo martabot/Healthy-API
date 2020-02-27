@@ -15,7 +15,7 @@ namespace Healthy2020.Models
         public int EventoId { get; set; }
         [ForeignKey("EventoId")]
         public Evento Evento { get; set; }
-        public DateTime FechaUltMod { get; set; }
+        public string FechaUltMod { get; set; }
         public int Estado { get;set; }
     }
 }
