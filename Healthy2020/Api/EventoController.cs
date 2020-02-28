@@ -92,11 +92,19 @@ namespace Healthy2020.Api
         //Eventos para coordinador
         [Route("Coordinador/{tipo}")]
         [Authorize(Policy = "Coordinador")]
-        public async Task<IActionResult> Coordinador()
+        public async Task<IActionResult> Coordinador(String tipo)
         {
             try
             {
-                return Ok(contexto.Evento.Where(x => x.Actividad.Coordinador.Id == UsuarioController.soyYo));
+            
+                if (tipo == "mias")
+                {
+                    return Ok(contexto.Evento.Where(x => x.Actividad.Coordinador.Id == UsuarioController.soyYo));
+                }
+                else
+                {
+                    return Ok(contexto.Evento.Include(a=>a.Actividad));
+                }
             }
             catch (Exception ex)
             {
@@ -150,16 +158,16 @@ namespace Healthy2020.Api
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Authorize(Policy = "Coordinador")]
-        public async Task<IActionResult> Delete(int id, int estado)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 var entidad = contexto.Evento.AsNoTracking().FirstOrDefault(e => e.Id == id);
                 if (entidad != null)
                 {
-                    entidad.Estado = estado;
+                    entidad.Estado = 0;
                     contexto.Evento.Update(entidad);
                     contexto.SaveChanges();
                     return Ok();

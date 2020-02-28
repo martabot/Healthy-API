@@ -69,8 +69,6 @@ namespace Healthy2020.Api
             }
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -79,6 +77,20 @@ namespace Healthy2020.Api
                 var usuario = User.Identity.Name;
 
                 return Ok(contexto.Usuario.FirstOrDefault(x => x.Mail == usuario));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("ValidarMail")]
+        public async Task<IActionResult> ValidarMail(String mail)
+        {
+            try
+            {
+                return Ok(contexto.Usuario.Single(x=>x.Mail==mail));
             }
             catch (Exception ex)
             {

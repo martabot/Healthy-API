@@ -42,6 +42,26 @@ namespace Healthy2020.Api
         }
 
         [HttpGet]
+        [Route("Todos")]
+        [Authorize(Policy ="Coordinador")]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var lista = contexto.Participante.Include(a=>a.Actividad).Where(x => x.Actividad.CoordinadorId == UsuarioController.soyYo && x.Estado == 1);
+         
+
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+
+        [HttpGet]
         public async Task<IActionResult> Get(int usuario, int actividad)
         {
             try

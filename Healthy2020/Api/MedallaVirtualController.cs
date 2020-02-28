@@ -6,6 +6,7 @@ using Healthy2020.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Healthy2020.Api
@@ -29,7 +30,7 @@ namespace Healthy2020.Api
         {
             try
             {
-                return Ok(contexto.MedallaVirtual.Where(x => x.UsuarioId == id));
+                return Ok(contexto.MedallaVirtual.Include(z=>z.Usuario).Where(x => x.UsuarioId == id));
             }
             catch (Exception ex)
             {
@@ -39,7 +40,7 @@ namespace Healthy2020.Api
 
         //Crea una nueva medalla
         [HttpPost]
-        public async Task<IActionResult> Post(MedallaVirtual entidad)
+        public async Task<IActionResult> Post([FromBody] MedallaVirtual entidad)
         {
             try
             {
